@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed - SpaceVoyager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'space-dark': '#0a0a18',
+                        'space-blue': '#1a1a2e',
+                        'space-purple': '#16213e',
+                        'neon-blue': '#0ea5e9',
+                        'neon-purple': '#8b5cf6',
+                        'neon-cyan': '#06b6d4',
+                    },
+                    fontFamily: {
+                        'orbitron': ['Orbitron', 'sans-serif'],
+                        'exo': ['Exo 2', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #0a0a18, #1a1a2e, #16213e);
+            background-attachment: fixed;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        .glow {
+            box-shadow: 0 0 15px rgba(14, 165, 233, 0.5);
+        }
+        
+        .text-glow {
+            text-shadow: 0 0 10px rgba(14, 165, 233, 0.7);
+        }
+        
+        .confirmation-card {
+            background: rgba(26, 26, 46, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 15px;
+        }
+        
+        .success-gradient {
+            background: linear-gradient(135deg, #10b981, #059669, #0ea5e9);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(to right, #0ea5e9, #8b5cf6);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #0ea5e9, #8b5cf6);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
+        }
+        
+        .ticket-preview {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            border: 2px dashed #0ea5e9;
+            transform: perspective(1000px) rotateX(5deg);
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #0ea5e9;
+            border-radius: 50%;
+            animation: confetti-fall 5s linear infinite;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body class="text-white font-exo min-h-screen">
+    <!-- Stars Background -->
+    <div id="stars-container"></div>
+    
+    <!-- Confetti Animation -->
+    <div id="confetti-container"></div>
+    
+    <!-- Navigation -->
+    <nav class="bg-space-dark/80 backdrop-blur-md border-b border-neon-blue/20 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center glow">
+                    <i class="fas fa-rocket text-white"></i>
+                </div>
+                <a href="index.html" class="font-orbitron text-xl font-bold text-glow">SpaceVoyager</a>
+            </div>
+            
+            <div class="hidden md:flex space-x-8">
+                <a href="index.html" class="nav-link hover:text-neon-blue transition-colors">Home</a>
+                <a href="destinations.html" class="nav-link hover:text-neon-blue transition-colors">Destinations</a>
+                <a href="booking.html" class="nav-link hover:text-neon-blue transition-colors">Booking</a>
+                <a href="about.html" class="nav-link hover:text-neon-blue transition-colors">About</a>
+                <a href="my-bookings.html" class="nav-link hover:text-neon-blue transition-colors">My Bookings</a>
+                <a href="login.html" class="nav-link hover:text-neon-blue transition-colors">Login</a>
+            </div>
+            
+            <div class="md:hidden">
+                <button class="text-white focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 relative z-10">
+        <!-- Success Header -->
+        <section class="py-12 text-center">
+            <div class="success-gradient w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 glow">
+                <i class="fas fa-check text-white text-3xl"></i>
+            </div>
+            <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4 text-glow">Booking Confirmed!</h1>
+            <p class="text-xl text-gray-300 mb-2">Your journey to the stars is officially scheduled</p>
+            <p class="text-neon-cyan">Booking Reference: <span class="font-mono">SV-2024-MOON-8472</span></p>
+        </section>
+
+        <!-- Booking Summary -->
+        <section class="py-8">
+            <div class="confirmation-card p-8 mb-8">
+                <h2 class="font-orbitron text-2xl mb-6 text-glow">Journey Summary</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Journey Details -->
+                    <div>
+                        <h3 class="font-orbitron text-xl mb-4 text-neon-blue">Trip Information</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between py-3 border-b border-neon-blue/20">
+                                <span class="text-gray-400">Destination:</span>
+                                <span class="font-semibold">The Moon</span>
+                            </div>
+                            <div class="flex justify-between py-3 border-b border-neon-blue/20">
+                                <span class="text-gray-400">Departure Date:</span>
+                                <span class="font-semibold">December 15, 2024</span>
+                            </div>
+                            <div class="flex justify-between py-3 border-b border-neon-blue/20">
+                                <span class="text-gray-400">Spacecraft:</span>
+                                <span class="font-semibold">Odyssey Class</span>
+                            </div>
+                            <div class="flex justify-between py-3 border-b border-neon-blue/20">
+                                <span class="text-gray-400">Accommodation:</span>
+                                <span class="font-semibold">Standard Cabin</span>
+                            </div>
+                            <div class="flex justify-between py-3 border-b border-neon-blue/20">
+                                <span class="text-gray-400">Duration:</span>
+                                <span class="font-semibold">3 days</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Passenger & Payment -->
+                    <div>
+                        <h3 class="font-orbitron text-xl mb-4 text-neon-blue">Passenger & Payment</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between py-3 border-b border-neon-blue/20">
+                                <span class="text-gray-400">Passengers:</span>
+                                <span class="font-semibold">2 Adults</span>
+                            </div>
+                            <div class="flex justify-between py-3 border-b border-neon-blue/20">
+                                <span class="text-gray-400">Base Price:</span>
+                                <span class="font-semibold">$50,000</span>
+                            </div>
+                            <div class="flex justify-between py-3 border-b border-neon-blue/20">
+                                <span class="text-gray-400">Insurance:</span>
+                                <span class="font-semibold">$2,000</span>
+                            </div>
+                            <div class="flex justify-between py-3 border-b border-neon-blue/20">
+                                <span class="text-gray-400">Taxes & Fees:</span>
+                                <span class="font-semibold">Included</span>
+                            </div>
+                            <div class="flex justify-between py-3 border-b border-neon-blue/20">
+                                <span class="text-gray-400 text-lg">Total Paid:</span>
+                                <span class="font-semibold text-neon-cyan text-lg">$52,000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Passenger Details -->
+                <div class="mt-8">
+                    <h3 class="font-orbitron text-xl mb-4 text-neon-blue">Passenger Details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-space-purple/50 p-4 rounded-lg">
+                            <h4 class="font-semibold mb-2">Primary Passenger</h4>
+                            <p class="text-gray-300">John Smith</p>
+                            <p class="text-gray-400 text-sm">john.smith@email.com</p>
+                        </div>
+                        <div class="bg-space-purple/50 p-4 rounded-lg">
+                            <h4 class="font-semibold mb-2">Secondary Passenger</h4>
+                            <p class="text-gray-300">Jane Smith</p>
+                            <p class="text-gray-400 text-sm">jane.smith@email.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Next Steps -->
+        <section class="py-8">
+            <h2 class="font-orbitron text-2xl text-center mb-8 text-glow">What's Next?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="confirmation-card p-6 text-center">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-r from-neon-blue to-neon-cyan flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-calendar-check text-white text-2xl"></i>
+                    </div>
+                    <h3 class="font-orbitron text-xl mb-3">Training Schedule</h3>
+                    <p class="text-gray-300 mb-4">
+                        Complete mandatory training sessions before your departure.
+                    </p>
+                    <button class="border border-neon-blue text-neon-blue px-4 py-2 rounded-lg text-sm hover:bg-neon-blue/10 transition-colors">
+                        View Schedule
+                    </button>
+                </div>
+                
+                <div class="confirmation-card p-6 text-center">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-r from-neon-purple to-pink-500 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-file-medical text-white text-2xl"></i>
+                    </div>
+                    <h3 class="font-orbitron text-xl mb-3">Medical Forms</h3>
+                    <p class="text-gray-300 mb-4">
+                        Submit required medical documentation within 30 days.
+                    </p>
+                    <button class="border border-neon-blue text-neon-blue px-4 py-2 rounded-lg text-sm hover:bg-neon-blue/10 transition-colors">
+                        Upload Documents
+                    </button>
+                </div>
+                
+                <div class="confirmation-card p-6 text-center">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-question-circle text-white text-2xl"></i>
+                    </div>
+                    <h3 class="font-orbitron text-xl mb-3">Need Help?</h3>
+                    <p class="text-gray-300 mb-4">
+                        Our support team is available 24/7 for any questions.
+                    </p>
+                    <button class="border border-neon-blue text-neon-blue px-4 py-2 rounded-lg text-sm hover:bg-neon-blue/10 transition-colors">
+                        Contact Support
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ticket Preview -->
+        <section class="py-8">
+            <div class="confirmation-card p-8">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                    <h2 class="font-orbitron text-2xl text-glow">Your Space Travel Ticket</h2>
+                    <div class="flex space-x-3 mt-4 md:mt-0">
+                        <button onclick="printTicket()" class="btn-primary text-white px-6 py-3 rounded-lg font-bold">
+                            <i class="fas fa-print mr-2"></i>Print Ticket
+                        </button>
+                        <button onclick="viewFullTicket()" class="border border-neon-blue text-neon-blue px-6 py-3 rounded-lg font-bold hover:bg-neon-blue/10 transition-colors">
+                            <i class="fas fa-external-link-alt mr-2"></i>View Full Ticket
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Ticket Preview -->
+                <div class="ticket-preview p-6 rounded-lg">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                        <div>
+                            <h3 class="font-orbitron text-xl text-neon-cyan">SPACEVOYAGER</h3>
+                            <p class="text-gray-300">Interplanetary Travel Ticket</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-400">Booking Ref</p>
+                            <p class="font-mono text-neon-cyan">SV-2024-MOON-8472</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                        <div>
+                            <p class="text-gray-400 text-sm">PASSENGER</p>
+                            <p class="font-semibold">John Smith & Jane Smith</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">DESTINATION</p>
+                            <p class="font-semibold">The Moon • Lunar Orbit</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">DEPARTURE</p>
+                            <p class="font-semibold">Dec 15, 2024 • 08:00 UTC</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">SPACECRAFT</p>
+                            <p class="font-semibold">Odyssey • Gate A</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center pt-4 border-t border-gray-600">
+                        <div class="text-center">
+                            <p class="text-gray-400 text-sm">BOARDING TIME</p>
+                            <p class="font-semibold">06:30 UTC</p>
+                        </div>
+                        <div class="w-20 h-20 bg-white rounded flex items-center justify-center">
+                            <!-- QR Code Placeholder -->
+                            <div class="text-center text-xs text-gray-800">
+                                QR CODE
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-gray-400 text-sm">SEAT</p>
+                            <p class="font-semibold">A1, A2</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Buttons -->
+        <section class="py-8 text-center">
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="my-bookings.html" class="btn-primary text-white px-8 py-4 rounded-lg font-bold text-lg">
+                    <i class="fas fa-list mr-2"></i>View All Bookings
+                </a>
+                <a href="destinations.html" class="border border-neon-purple text-neon-purple px-8 py-4 rounded-lg font-bold text-lg hover:bg-neon-purple/10 transition-colors">
+                    <i class="fas fa-rocket mr-2"></i>Book Another Journey
+                </a>
+                <a href="index.html" class="border border-gray-500 text-gray-400 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-500/10 transition-colors">
+                    <i class="fas fa-home mr-2"></i>Return Home
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-space-dark border-t border-neon-blue/20 py-8 mt-12 relative z-10">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center">
+                            <i class="fas fa-rocket text-white text-sm"></i>
+                        </div>
+                        <span class="font-orbitron text-lg">SpaceVoyager</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">© 2023 SpaceVoyager. All rights reserved.</p>
+                </div>
+                
+                <div class="flex space-x-6 mb-4 md:mb-0">
+                    <a href="#" class="text-gray-400 hover:text-neon-blue transition-colors text-xl">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-neon-blue transition-colors text-xl">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-neon-blue transition-colors text-xl">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+</body>
+</html>
