@@ -54,18 +54,17 @@ form.addEventListener("submit", (e) => {
 
   if (isEmailValid && isPasswordValid) {
     successMessage.textContent = "Connexion réussie Bienvenue à bord !";
-    localStorage.setItem(
-      "userSession",
-      JSON.stringify({
-        email: emailInput.value,
-        isLoggedIn: true,
-      })
-    );
+
+    const sessionData = {
+      email: emailInput.value,
+      isLoggedIn: true
+    };
+
+    localStorage.setItem("userSession", JSON.stringify(sessionData));
 
     setTimeout(() => {
       window.location.href = "index.html";
     }, 1500);
-
 
     form.reset();
   } else {
